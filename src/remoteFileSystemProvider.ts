@@ -9,6 +9,10 @@ export class RemoteFileSystemProvider implements vscode.FileSystemProvider {
 
     constructor(private connectionManager: SSHConnectionManager) {}
 
+    dispose() {
+        this._emitter.dispose();
+    }
+
     private async getSFTP(uri: vscode.Uri): Promise<SFTPWrapper> {
         const hostName = uri.authority;
         const connection = this.connectionManager.getConnection(hostName);

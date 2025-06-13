@@ -4,6 +4,10 @@
   "description": "Open any folder on a remote machine using SSH and take advantage of full feature set",
   "version": "1.0.0",
   "publisher": "sufian-dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sufianWG/open-remote-ssh.git"
+  },
   "engines": {
     "vscode": "^1.74.0"
   },

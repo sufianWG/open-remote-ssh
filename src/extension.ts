@@ -134,7 +134,16 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() {
+    // Clean up all connections
     if (connectionManager) {
         connectionManager.disconnectAll();
     }
+    
+    // Dispose of file system provider
+    if (fileSystemProvider) {
+        fileSystemProvider.dispose();
+    }
+    
+    // Clear any stored state
+    console.log('Open Remote SSH extension deactivated and cleaned up');
 }
