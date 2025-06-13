@@ -2,7 +2,7 @@
   "name": "open-remote-ssh",
   "displayName": "Open Remote - SSH",
   "description": "Open any folder on a remote machine using SSH and take advantage of full feature set",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "sufian-dev",
   "repository": {
     "type": "git",
@@ -24,7 +24,14 @@
     "onCommand:openremotessh.connect",
     "onCommand:openremotessh.disconnect",
     "onCommand:openremotessh.settings",
-    "onFileSystem:ssh"
+    "onCommand:openremotessh.showLog",
+    "onCommand:openremotessh.openTerminal",
+    "onFileSystem:openssh",
+    "onView:sshHosts"
+  ],
+  "extensionKind": [
+    "ui",
+    "workspace"
   ],
   "main": "./out/extension.js",
   "contributes": {

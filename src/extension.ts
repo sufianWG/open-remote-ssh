@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
     const terminalProvider = new RemoteTerminalProvider(connectionManager);
 
     context.subscriptions.push(
-        vscode.workspace.registerFileSystemProvider('ssh', fileSystemProvider, { 
+        vscode.workspace.registerFileSystemProvider('openssh', fileSystemProvider, { 
             isCaseSensitive: true,
             isReadonly: false
         })
@@ -59,8 +59,17 @@ export function activate(context: vscode.ExtensionContext) {
                             password
                         });
 
-                        const remoteUri = vscode.Uri.parse(`ssh://${selected.host.name}/`);
-                        await vscode.commands.executeCommand('vscode.openFolder', remoteUri);
+                        // Show folder picker for remote folder
+                        const folderPath = await vscode.window.showInputBox({
+                            prompt: 'Enter remote folder path to open (e.g., /home/user)',
+                            value: '/home/' + selected.host.user,
+                            ignoreFocusOut: true
+                        });
+
+                        if (folderPath) {
+                            const remoteUri = vscode.Uri.parse(`openssh://${selected.host.name}${folderPath}`);
+                            await vscode.commands.executeCommand('vscode.openFolder', remoteUri);
+                        }
                         
                         vscode.window.showInformationMessage(`Connected to ${selected.host.name}`);
                     }
@@ -110,8 +119,17 @@ export function activate(context: vscode.ExtensionContext) {
                         password
                     });
 
-                    const remoteUri = vscode.Uri.parse(`ssh://${config.name}/`);
-                    await vscode.commands.executeCommand('vscode.openFolder', remoteUri);
+                    // Show folder picker for remote folder
+                    const folderPath = await vscode.window.showInputBox({
+                        prompt: 'Enter remote folder path to open (e.g., /home/user)',
+                        value: '/home/' + config.user,
+                        ignoreFocusOut: true
+                    });
+
+                    if (folderPath) {
+                        const remoteUri = vscode.Uri.parse(`openssh://${config.name}${folderPath}`);
+                        await vscode.commands.executeCommand('vscode.openFolder', remoteUri);
+                    }
                     
                     vscode.window.showInformationMessage(`Connected to ${config.name}`);
                 }
