@@ -2,7 +2,7 @@
 	"name": "open-remote-ssh",
 	"displayName": "Open Remote - SSH",
 	"description": "Use any remote machine with a SSH server as your development environment.",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"publisher": "sufian-dev",
 	"repository": {
 		"type": "git",
@@ -29,12 +29,7 @@
 	],
 	"api": "none",
 	"activationEvents": [
-		"onCommand:openremotessh.openEmptyWindow",
-		"onCommand:openremotessh.openEmptyWindowInCurrentWindow",
-		"onCommand:openremotessh.openConfigFile",
-		"onCommand:openremotessh.showLog",
-		"onResolveRemoteAuthority:ssh-remote",
-		"onView:sshHosts"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

@@ -2,9 +2,10 @@
 
 ![Open Remote SSH](https://raw.githubusercontent.com/sufianWG/open-remote-ssh/master/docs/images/open-remote-ssh.gif)
 
-## Latest Update (v0.1.1)
+## Latest Update (v0.1.2)
 
-This fork includes critical fixes for compatibility and server download issues:
+This fork includes critical fixes for compatibility and activation issues:
+- **Fixed**: Extension activation issue causing "command not found" errors in PearAI
 - **Fixed**: 404 error when downloading server binaries for Void editor and other VSCode forks (issue [#201](https://github.com/jeanp413/open-remote-ssh/issues/201))
 - **Fixed**: VSCode engine compatibility issue with PearAI and other VSCode forks (changed from ^1.101.0 to ^1.85.0)
 - **Added**: Automatic fallback to VSCode/VSCodium server binaries when primary download fails
@@ -88,4 +89,4 @@ If you encounter any problems, please report them on the [Issues page](https://g
 
 ## Credits
 
-This extension is based on the original work by [jeanp413](https://github.com/jeanp413/open-remote-ssh). The v0.1.1 release includes critical fixes for broader VSCode fork compatibility.
+This extension is based on the original work by [jeanp413](https://github.com/jeanp413/open-remote-ssh). The v0.1.2 release includes critical fixes for broader VSCode fork compatibility.
