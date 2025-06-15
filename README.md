@@ -2,7 +2,7 @@
 
 ![Open Remote SSH](https://raw.githubusercontent.com/sufianWG/open-remote-ssh/master/docs/images/open-remote-ssh.gif)
 
-## Latest Update (v0.0.50)
+## Latest Update (v0.1.1)
 
 This fork includes critical fixes for compatibility and server download issues:
 - **Fixed**: 404 error when downloading server binaries for Void editor and other VSCode forks (issue [#201](https://github.com/jeanp413/open-remote-ssh/issues/201))
@@ -88,4 +88,4 @@ If you encounter any problems, please report them on the [Issues page](https://g
 
 ## Credits
 
-This extension is based on the original work by [jeanp413](https://github.com/jeanp413/open-remote-ssh). The v0.0.50 release includes critical fixes for broader VSCode fork compatibility.
+This extension is based on the original work by [jeanp413](https://github.com/jeanp413/open-remote-ssh). The v0.1.1 release includes critical fixes for broader VSCode fork compatibility.
