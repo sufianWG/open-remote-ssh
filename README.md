@@ -1,6 +1,29 @@
 # Open Remote - SSH
 
-![Open Remote SSH](https://raw.githubusercontent.com/jeanp413/open-remote-ssh/master/docs/images/open-remote-ssh.gif)
+![Open Remote SSH](https://raw.githubusercontent.com/sufianWG/open-remote-ssh/master/docs/images/open-remote-ssh.gif)
+
+## Latest Update (v0.0.50)
+
+This fork includes a critical fix for issue [#201](https://github.com/jeanp413/open-remote-ssh/issues/201):
+- **Fixed**: 404 error when downloading server binaries for Void editor and other VSCode forks
+- **Added**: Automatic fallback to VSCode/VSCodium server binaries when primary download fails
+- **Improved**: Better error handling and logging during server installation
+
+### Installation
+
+Download the latest release from the [Releases page](https://github.com/sufianWG/open-remote-ssh/releases) and install the `.vsix` file in your VSCode-compatible editor.
+
+## About This Extension
+
+Open Remote - SSH allows you to use any remote machine with an SSH server as your development environment. This extension complements the [Remote - SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh) extension available in the Visual Studio Code Marketplace, providing similar functionality for VSCode forks and distributions.
+
+### Key Features
+
+- Connect to any remote machine with SSH access
+- Full VSCode functionality on remote machines
+- Support for various platforms including Linux, macOS, Windows, and BSD variants
+- Automatic server binary installation with fallback mechanisms
+- Compatible with VSCode forks like VSCodium, Void editor, and others
 
 ## SSH Host Requirements
 You can connect to a running SSH server on the following platforms.
@@ -29,7 +52,7 @@ Enable the extension in your `argv.json`
     ...
     "enable-proposed-api": [
         ...,
-        "jeanp413.open-remote-ssh",
+        "sufian-dev.open-remote-ssh",
     ]
     ...
 }
@@ -48,3 +71,20 @@ sudo apk add bash libstdc++
 ## SSH configuration file
 
 [OpenSSH](https://www.openssh.com/) supports using a [configuration file](https://linuxize.com/post/using-the-ssh-config-file/) to store all your different SSH connections. To use an SSH config file, run the `Remote-SSH: Open SSH Configuration File...` command.
+
+## Troubleshooting
+
+### Server Binary Download Issues
+
+If you encounter a 404 error when connecting to a remote host, this extension will automatically try alternative download sources. The fallback mechanism will attempt to download compatible server binaries from:
+1. The configured primary source (your VSCode fork's releases)
+2. Official VSCode releases
+3. VSCodium releases
+
+### Reporting Issues
+
+If you encounter any problems, please report them on the [Issues page](https://github.com/sufianWG/open-remote-ssh/issues).
+
+## Credits
+
+This extension is based on the original work by [jeanp413](https://github.com/jeanp413/open-remote-ssh). The v0.0.50 release includes critical fixes for broader VSCode fork compatibility.
