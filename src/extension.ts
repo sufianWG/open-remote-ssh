@@ -1,167 +1,33 @@
 import * as vscode from 'vscode';
-import { SSHConnectionManager } from './sshConnectionManager';
-import { RemoteFileSystemProvider } from './remoteFileSystemProvider';
-import { SSHHostProvider } from './sshHostProvider';
-import { SSHConfigManager } from './sshConfigManager';
-import { RemoteTerminalProvider } from './remoteTerminalProvider';
+import Log from './common/logger';
+import { RemoteSSHResolver, REMOTE_SSH_AUTHORITY } from './authResolver';
+import { openSSHConfigFile, promptOpenRemoteSSHWindow } from './commands';
+import { HostTreeDataProvider } from './hostTreeView';
+import { getRemoteWorkspaceLocationData, RemoteLocationHistory } from './remoteLocationHistory';
 
-let connectionManager: SSHConnectionManager;
-let fileSystemProvider: RemoteFileSystemProvider;
+export async function activate(context: vscode.ExtensionContext) {
+    const logger = new Log('Remote - SSH');
+    context.subscriptions.push(logger);
 
-export function activate(context: vscode.ExtensionContext) {
-    console.log('Open Remote SSH extension is now active!');
+    const remoteSSHResolver = new RemoteSSHResolver(context, logger);
+    context.subscriptions.push(vscode.workspace.registerRemoteAuthorityResolver(REMOTE_SSH_AUTHORITY, remoteSSHResolver));
+    context.subscriptions.push(remoteSSHResolver);
 
-    connectionManager = new SSHConnectionManager(context);
-    fileSystemProvider = new RemoteFileSystemProvider(connectionManager);
-    
-    const sshConfigManager = new SSHConfigManager();
-    const hostProvider = new SSHHostProvider(sshConfigManager);
-    const terminalProvider = new RemoteTerminalProvider(connectionManager);
+    const locationHistory = new RemoteLocationHistory(context);
+    const locationData = getRemoteWorkspaceLocationData();
+    if (locationData) {
+        await locationHistory.addLocation(locationData[0], locationData[1]);
+    }
 
-    context.subscriptions.push(
-        vscode.workspace.registerFileSystemProvider('openssh', fileSystemProvider, { 
-            isCaseSensitive: true,
-            isReadonly: false
-        })
-    );
+    const hostTreeDataProvider = new HostTreeDataProvider(locationHistory);
+    context.subscriptions.push(vscode.window.createTreeView('sshHosts', { treeDataProvider: hostTreeDataProvider }));
+    context.subscriptions.push(hostTreeDataProvider);
 
-    context.subscriptions.push(
-        vscode.window.createTreeView('sshHosts', {
-            treeDataProvider: hostProvider,
-            showCollapseAll: true
-        })
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand('openremotessh.connect', async () => {
-            try {
-                const hosts = await sshConfigManager.getHosts();
-                const hostLabels = hosts.map(h => ({
-                    label: h.name,
-                    description: `${h.user}@${h.host}:${h.port || 22}`,
-                    host: h
-                }));
-
-                const selected = await vscode.window.showQuickPick(hostLabels, {
-                    placeHolder: 'Select SSH host to connect'
-                });
-
-                if (selected) {
-                    const password = await vscode.window.showInputBox({
-                        prompt: `Enter password for ${selected.host.user}@${selected.host.host}`,
-                        password: true,
-                        ignoreFocusOut: true
-                    });
-
-                    if (password !== undefined) {
-                        await connectionManager.connect({
-                            ...selected.host,
-                            password
-                        });
-
-                        // Show folder picker for remote folder
-                        const folderPath = await vscode.window.showInputBox({
-                            prompt: 'Enter remote folder path to open (e.g., /home/user)',
-                            value: '/home/' + selected.host.user,
-                            ignoreFocusOut: true
-                        });
-
-                        if (folderPath) {
-                            const remoteUri = vscode.Uri.parse(`openssh://${selected.host.name}${folderPath}`);
-                            await vscode.commands.executeCommand('vscode.openFolder', remoteUri);
-                        }
-                        
-                        vscode.window.showInformationMessage(`Connected to ${selected.host.name}`);
-                    }
-                }
-            } catch (error) {
-                vscode.window.showErrorMessage(`Connection failed: ${error}`);
-            }
-        })
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand('openremotessh.disconnect', async () => {
-            const activeHost = connectionManager.getActiveConnection();
-            if (activeHost) {
-                await connectionManager.disconnect(activeHost);
-                vscode.window.showInformationMessage(`Disconnected from ${activeHost}`);
-            } else {
-                vscode.window.showWarningMessage('No active SSH connection');
-            }
-        })
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand('openremotessh.settings', () => {
-            vscode.commands.executeCommand('workbench.action.openSettings', 'remote-ssh');
-        })
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand('openremotessh.showLog', () => {
-            connectionManager.showLog();
-        })
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand('openremotessh.connectToHost', async (config) => {
-            try {
-                const password = await vscode.window.showInputBox({
-                    prompt: `Enter password for ${config.user}@${config.host}`,
-                    password: true,
-                    ignoreFocusOut: true
-                });
-
-                if (password !== undefined) {
-                    await connectionManager.connect({
-                        ...config,
-                        password
-                    });
-
-                    // Show folder picker for remote folder
-                    const folderPath = await vscode.window.showInputBox({
-                        prompt: 'Enter remote folder path to open (e.g., /home/user)',
-                        value: '/home/' + config.user,
-                        ignoreFocusOut: true
-                    });
-
-                    if (folderPath) {
-                        const remoteUri = vscode.Uri.parse(`openssh://${config.name}${folderPath}`);
-                        await vscode.commands.executeCommand('vscode.openFolder', remoteUri);
-                    }
-                    
-                    vscode.window.showInformationMessage(`Connected to ${config.name}`);
-                }
-            } catch (error) {
-                vscode.window.showErrorMessage(`Connection failed: ${error}`);
-            }
-        })
-    );
-
-    context.subscriptions.push(
-        vscode.commands.registerCommand('openremotessh.openTerminal', async () => {
-            const activeHost = connectionManager.getActiveConnection();
-            if (activeHost) {
-                terminalProvider.createTerminal(activeHost);
-            } else {
-                vscode.window.showWarningMessage('No active SSH connection');
-            }
-        })
-    );
+    context.subscriptions.push(vscode.commands.registerCommand('openremotessh.openEmptyWindow', () => promptOpenRemoteSSHWindow(false)));
+    context.subscriptions.push(vscode.commands.registerCommand('openremotessh.openEmptyWindowInCurrentWindow', () => promptOpenRemoteSSHWindow(true)));
+    context.subscriptions.push(vscode.commands.registerCommand('openremotessh.openConfigFile', () => openSSHConfigFile()));
+    context.subscriptions.push(vscode.commands.registerCommand('openremotessh.showLog', () => logger.show()));
 }
 
 export function deactivate() {
-    // Clean up all connections
-    if (connectionManager) {
-        connectionManager.disconnectAll();
-    }
-    
-    // Dispose of file system provider
-    if (fileSystemProvider) {
-        fileSystemProvider.dispose();
-    }
-    
-    // Clear any stored state
-    console.log('Open Remote SSH extension deactivated and cleaned up');
 }
