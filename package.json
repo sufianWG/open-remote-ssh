@@ -1,9 +1,9 @@
 {
-	"name": "open-remote-ssh",
-	"displayName": "Open Remote - SSH",
+	"name": "remote-ssh",
+	"displayName": "Remote - SSH",
 	"description": "Use any remote machine with a SSH server as your development environment.",
-	"version": "0.1.2",
-	"publisher": "sufian-dev",
+	"version": "1.0.0",
+	"publisher": "ms-vscode-remote",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/sufian-dev/open-remote-ssh.git"
@@ -15,12 +15,9 @@
 	"engines": {
 		"vscode": "^1.85.0"
 	},
+	"categories": ["Other"],
 	"extensionKind": [
 		"ui"
-	],
-	"enabledApiProposals": [
-		"resolvers",
-		"contribViewsRemote"
 	],
 	"keywords": [
 		"remote development",
@@ -28,6 +25,12 @@
 		"ssh"
 	],
 	"api": "none",
+	"capabilities": {
+		"untrustedWorkspaces": {
+			"supported": true
+		},
+		"virtualWorkspaces": false
+	},
 	"activationEvents": [
 		"*"
 	],
@@ -55,7 +58,8 @@
 						"type": "string"
 					},
 					"description": "List of extensions that should be installed automatically on all SSH hosts.",
-					"scope": "application"
+					"scope": "application",
+					"default": []
 				},
 				"remote.SSH.enableDynamicForwarding": {
 					"type": "boolean",

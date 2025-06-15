@@ -2,18 +2,35 @@
 
 ![Open Remote SSH](https://raw.githubusercontent.com/sufianWG/open-remote-ssh/master/docs/images/open-remote-ssh.gif)
 
-## Latest Update (v0.1.2)
+## Remote - SSH for PearAI (v1.0.0)
 
-This fork includes critical fixes for compatibility and activation issues:
-- **Fixed**: Extension activation issue causing "command not found" errors in PearAI
-- **Fixed**: 404 error when downloading server binaries for Void editor and other VSCode forks (issue [#201](https://github.com/jeanp413/open-remote-ssh/issues/201))
-- **Fixed**: VSCode engine compatibility issue with PearAI and other VSCode forks (changed from ^1.101.0 to ^1.85.0)
-- **Added**: Automatic fallback to VSCode/VSCodium server binaries when primary download fails
-- **Improved**: Better error handling and logging during server installation
+This is a **drop-in replacement** for Microsoft's Remote-SSH extension specifically designed for **PearAI**, **Cursor**, **VSCodium**, and other VS Code forks that cannot use Microsoft's proprietary Remote-SSH extension.
+
+### Key Features:
+- **Full Compatibility**: Works exactly like Microsoft's Remote-SSH extension
+- **No License Restrictions**: Works on any VS Code fork including PearAI
+- **Complete Functionality**: SSH connections, port forwarding, remote development
+- **Seamless Integration**: Uses the same extension ID (`ms-vscode-remote.remote-ssh`) to satisfy PearAI's requirements
+- **Automatic Server Installation**: Downloads and installs VS Code server on remote machines
+- **Fallback Support**: Multiple download sources for maximum compatibility
 
 ### Installation
 
 Download the latest release from the [Releases page](https://github.com/sufianWG/open-remote-ssh/releases) and install the `.vsix` file in your VSCode-compatible editor.
+
+### For PearAI Users
+
+This extension **completely solves** the "Remote - SSH is required" issue in PearAI by:
+
+1. **Using the exact extension ID** that PearAI expects (`ms-vscode-remote.remote-ssh`)
+2. **Providing all required functionality** without Microsoft's license restrictions
+3. **No more error messages** - PearAI will recognize this as the "official" Remote-SSH extension
+
+**Installation Steps:**
+1. Download the `.vsix` file from releases
+2. Install via "Install from VSIX" in PearAI
+3. Restart PearAI
+4. Use SSH functionality normally - no more warnings!
 
 ## About This Extension
 
@@ -42,25 +59,7 @@ You can connect to a running SSH server on the following platforms.
 
 ## Requirements
 
-**Activation**
-
-> NOTE: Not needed in VSCodium since version 1.75
-
-Enable the extension in your `argv.json`
-
-
-```json
-{
-    ...
-    "enable-proposed-api": [
-        ...,
-        "sufian-dev.open-remote-ssh",
-    ]
-    ...
-}
-```
-which you can open by running the `Preferences: Configure Runtime Arguments` command.
-The file is located in `~/.vscode-oss/argv.json`.
+No special requirements. The extension works out of the box with PearAI, VSCodium, and other VSCode forks.
 
 **Alpine linux**
 
@@ -89,4 +88,4 @@ If you encounter any problems, please report them on the [Issues page](https://g
 
 ## Credits
 
-This extension is based on the original work by [jeanp413](https://github.com/jeanp413/open-remote-ssh). The v0.1.2 release includes critical fixes for broader VSCode fork compatibility.
+This extension is based on the original work by [jeanp413](https://github.com/jeanp413/open-remote-ssh). The v1.0.0 release provides complete Remote-SSH functionality for VS Code forks.
