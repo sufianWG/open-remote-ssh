@@ -4,8 +4,9 @@
 
 ## Latest Update (v0.0.50)
 
-This fork includes a critical fix for issue [#201](https://github.com/jeanp413/open-remote-ssh/issues/201):
-- **Fixed**: 404 error when downloading server binaries for Void editor and other VSCode forks
+This fork includes critical fixes for compatibility and server download issues:
+- **Fixed**: 404 error when downloading server binaries for Void editor and other VSCode forks (issue [#201](https://github.com/jeanp413/open-remote-ssh/issues/201))
+- **Fixed**: VSCode engine compatibility issue with PearAI and other VSCode forks (changed from ^1.101.0 to ^1.85.0)
 - **Added**: Automatic fallback to VSCode/VSCodium server binaries when primary download fails
 - **Improved**: Better error handling and logging during server installation
 
